@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.yearup.data.CategoryDao;
 import org.yearup.data.ProductDao;
 import org.yearup.models.Category;
@@ -35,8 +36,7 @@ public class CategoriesController {
     }
 
     @GetMapping()
-    public List<Category> getAll()
-    {
+    public List<Category> getAll() {
         // find and return all categories
         return categoryDao.getAllCategories();
     }
@@ -44,8 +44,7 @@ public class CategoriesController {
     // add the appropriate annotation for a get action
 
     @GetMapping("{id}")
-    public Category getById(@PathVariable int id)
-    {
+    public Category getById(@PathVariable int id) {
         // get the category by id
         return categoryDao.getById(id);
     }
@@ -53,11 +52,9 @@ public class CategoriesController {
     // the url to return all products in category 1 would look like this
     // https://localhost:8080/categories/1/products
 
-   //Go back to the original code
 
     @GetMapping("{categoryId}/products")
-    public List<Product> getProductsById(@PathVariable int categoryId)
-    {
+    public List<Product> getProductsById(@PathVariable int categoryId) {
 
         return productDao.listByCategoryId(categoryId);
         // get a list of product by categoryId
@@ -69,29 +66,32 @@ public class CategoriesController {
 
     @PostMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public Category addCategory(@RequestBody Category category)
-        {
-        // insert the category
-        return categoryDao.insert(category);
+    public Category addCategory(@RequestBody Category category) {
+        try {
+            return categoryDao.insert(category);
+        } catch (Exception ex) {
+            // insert the category
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+        }
+
     }
+        // add annotation to call this method for a PUT (update) action - the url path must include the categoryId
+        // add annotation to ensure that only an ADMIN can call this function
 
-    // add annotation to call this method for a PUT (update) action - the url path must include the categoryId
-    // add annotation to ensure that only an ADMIN can call this function
+        @PutMapping("{categoryId}")
+        @PreAuthorize("hasRole('ROLE_ADMIN')")
+        public void updateCategory ( @PathVariable int categoryId, @RequestBody Category category){
+            categoryDao.update(categoryId, category);
+        }
 
-    @PutMapping("{categoryId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void updateCategory(@PathVariable int categoryId, @RequestBody Category category) {
-        categoryDao.update(categoryId, category);
+
+        // add annotation to call this method for a DELETE action - the url path must include the categoryId
+        // add annotation to ensure that only an ADMIN can call this function
+
+        @DeleteMapping("{categoryId}")
+        @PreAuthorize("hasRole('ROLE_ADMIN')")
+        public void deleteCategory ( @PathVariable int categoryId){
+            categoryDao.delete(categoryId);
+            // delete the category by id
+        }
     }
-
-
-    // add annotation to call this method for a DELETE action - the url path must include the categoryId
-    // add annotation to ensure that only an ADMIN can call this function
-
-    @DeleteMapping("{categoryId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void deleteCategory(@PathVariable int categoryId) {
-        categoryDao.delete(categoryId);
-        // delete the category by id
-    }
-}
