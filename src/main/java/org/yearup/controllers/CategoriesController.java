@@ -81,7 +81,12 @@ public class CategoriesController {
     @PutMapping("{categoryId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void updateCategory(@PathVariable int categoryId, @RequestBody Category category) {
-        categoryDao.update(categoryId, category);
+
+        try {
+            categoryDao.update(categoryId, category);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+        }
     }
 
 
@@ -102,7 +107,8 @@ public class CategoriesController {
         } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
+        // delete the category by id
     }
 }
 
-            // delete the category by id
+
