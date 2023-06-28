@@ -70,8 +70,22 @@ public class CategoriesController {
 
     @GetMapping("{categoryId}/products")
     public List<Product> getProductsById(@PathVariable int categoryId) {
+        {
+            try
+            {
+                var product = productDao.getById(categoryId);
 
-        return productDao.listByCategoryId(categoryId);
+                if(product == null)
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+                return productDao.listByCategoryId(categoryId);
+            }
+            catch(Exception ex)
+            {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+            }
+        }
+
         // get a list of product by categoryId
 
     }
