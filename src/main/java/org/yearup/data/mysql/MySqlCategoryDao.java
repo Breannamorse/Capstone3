@@ -143,10 +143,8 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
             return category;
         }
 
-    @Override
-    public List<Category> getAllCategories(Integer categoryId, String name, String description) {
-        return null;
-    }
+
+
 
     private Category mapRow (ResultSet row) throws SQLException {
             int categoryId = row.getInt("category_id");

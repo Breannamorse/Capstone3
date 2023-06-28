@@ -15,5 +15,5 @@ public interface CategoryDao
 
     Category insert(Category category);
 
-    List<Category> getAllCategories(Integer categoryId, String name, String description);
+
 }
