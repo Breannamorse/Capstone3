@@ -41,17 +41,13 @@ public class CategoriesController {
     @GetMapping("")
     @PreAuthorize("permitAll()")
     public List<Category> getAllCategories() {
-        try
-        {
+        try {
             return categoryDao.getAllCategories();
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
-        // find and return all categories
-
+    // find and return all categories
 
 
     // add the appropriate annotation for a get action
@@ -59,21 +55,18 @@ public class CategoriesController {
     @GetMapping("{id}")
     @PreAuthorize("permitAll()")
     public Category getById(@PathVariable int id) {
-        {
-            try
-            {
+
+            try {
                 var category = categoryDao.getById(id);
 
-                if(category == null)
+                if (category == null)
                     throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
                 return categoryDao.getById(id);
-            }
-            catch(Exception ex)
-            {
+            } catch (Exception ex) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
             }
-        }
+        
         // get the category by id
 
     }
@@ -86,21 +79,18 @@ public class CategoriesController {
     @GetMapping("{categoryId}/products")
     @PreAuthorize("permitAll()")
     public List<Product> getProductsById(@PathVariable int categoryId) {
-        {
-            try
-            {
+
+            try {
                 var product = productDao.getById(categoryId);
 
-                if(product == null)
+                if (product == null)
                     throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
                 return productDao.listByCategoryId(categoryId);
-            }
-            catch(Exception ex)
-            {
+            } catch (Exception ex) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
             }
-        }
+
 
         // get a list of product by categoryId
 
@@ -141,20 +131,22 @@ public class CategoriesController {
 
     @DeleteMapping("{categoryId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteCategory(@PathVariable int categoryId) {
 
-        try {
+       /* try {
             var category = categoryDao.getById(categoryId);
 
             if (category == null)
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);*/
 
             categoryDao.delete(categoryId);
-        } catch (Exception ex) {
+      /*  } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
-        // delete the category by id
+      */  // delete the category by id
+        }
     }
-}
+
 
 
