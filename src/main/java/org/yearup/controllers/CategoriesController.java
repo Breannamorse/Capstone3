@@ -84,6 +84,7 @@ public class CategoriesController {
 
 
     @GetMapping("{categoryId}/products")
+    @PreAuthorize("permitAll()")
     public List<Product> getProductsById(@PathVariable int categoryId) {
         {
             try
@@ -110,6 +111,7 @@ public class CategoriesController {
 
     @PostMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ResponseStatus(HttpStatus.CREATED)
     public Category addCategory(@RequestBody Category category) {
         try {
             return categoryDao.insert(category);
