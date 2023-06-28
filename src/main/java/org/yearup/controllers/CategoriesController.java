@@ -10,6 +10,7 @@ import org.yearup.data.ProductDao;
 import org.yearup.models.Category;
 import org.yearup.models.Product;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -35,11 +36,25 @@ public class CategoriesController {
         this.productDao = productDao;
     }
 
+
     @GetMapping()
-    public List<Category> getAll() {
-        // find and return all categories
-        return categoryDao.getAllCategories();
+    public List<Category> getAll(@RequestParam(name="cat", required = false) Integer categoryId,
+                                 @RequestParam(name="minPrice", required = false) String name,
+                                 @RequestParam(name="maxPrice", required = false) String description
+                                 )
+    {
+        try
+        {
+            return categoryDao.getAllCategories(categoryId, name, description);
+        }
+        catch(Exception ex)
+        {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+        }
     }
+        // find and return all categories
+
+
 
     // add the appropriate annotation for a get action
 
