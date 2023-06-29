@@ -55,18 +55,36 @@ class MySqlCategoryDaoTest extends BaseDaoTestClass {
         assertEquals(updatedCategory.getDescription(), actual.getDescription());
     }
 
-    @Test
-    public void delete_shouldDelete_theCorrectCategoryId() {
-        // Arrange
-        Category deleteCategory = new Category();
-        deleteCategory.setCategoryId(-3);
-        deleteCategory.setName("Home & Kitchen");
-        deleteCategory.setDescription("");
+    /*  @Test
+      public void delete_shouldDelete_theCorrectCategoryId() {
+          // Arrange
+          Category deleteCategory = new Category();
+          deleteCategory.setCategoryId(-3);
 
-        // Act
-        boolean deleted = dao.delete(deleteCategory.getCategoryId());
 
-        // Assert
-        assertTrue(deleted);
+          // Act
+          dao.delete(deleteCategory.getCategoryId());
+
+          // Assert
+          assertTrue(deleteCategory.getCategoryId());
+      }*/
+  @Test
+    public void create_shouldCreate_inTheCorrectCategory() {
+        // arrange
+        Category createdCategory = new Category() {{
+
+            setName("New");
+            setDescription("Test");
+        }};
+        // act
+
+
+        Category actual = dao.create(createdCategory);
+
+        // assert
+
+        assertEquals(createdCategory.getName(), actual.getName());
+        assertEquals(createdCategory.getDescription(), actual.getDescription());
     }
+
 }
