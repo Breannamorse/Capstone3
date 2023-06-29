@@ -55,9 +55,8 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
             try (
                     ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    int categoryID = resultSet.getInt("category_id");
-                    String name = resultSet.getString("name");
-                    Category category = new Category(categoryID, name);
+
+                    Category category = mapRow(resultSet);
                     return category;
                     // get category by id
                 }
@@ -81,13 +80,14 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
 
         @Override
         public void update ( int categoryId, Category category){
-            String sql = "UPDATE categories SET name = ? WHERE category_id = ?";
+            String sql = "UPDATE categories SET name = ?, description = ? WHERE category_id = ?";
 
             try (Connection connection = dataSource.getConnection();
                  PreparedStatement statement = connection.prepareStatement(sql)) {
 
                 statement.setString(1, category.getName());
-                statement.setInt(2, categoryId);
+                statement.setString(2,category.getDescription());
+                statement.setInt(3, categoryId);
 
                 statement.executeUpdate();
             } catch (SQLException e) {
